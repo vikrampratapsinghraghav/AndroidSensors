@@ -8,21 +8,31 @@
 import React, { useEffect } from 'react';
 import {
   Alert,
+  Button,
   SafeAreaView,
+  Text,
 } from 'react-native';
 import BackgroundFetch from 'react-native-background-fetch';
 // import PushNotification from 'react-native-push-notification';
 // import PushNotification from 'react-native-push-notification';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import { PermissionsAndroid, Platform } from "react-native";
-
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ActivityTracker from './src/ActivityTracker';
 import MedicineReminder from './src/MedicineReminder';
 import { CHANNEL_ID, CHANNEL_NAME } from './src/constants';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Dashboard from './src/Dashboard';
 import MapSection from './src/Map';
+import TrackActivity from './src/TrackActivity';
+import HomeScreen from './src/Home';
+import Readings from './src/Readings';
+import ActivityHistory from './src/ActivityHistory';
 
+
+
+const Stack = createNativeStackNavigator();
 
 
 
@@ -197,14 +207,40 @@ function App(): React.JSX.Element {
   
 
   
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="MainScreen"
+        screenOptions={{
+          headerStyle: { backgroundColor: "#6200EE" },
+          headerTintColor: "#FFF",
+          headerTitleStyle: { fontWeight: "bold" },
+        }}
+      >
+        <Stack.Screen name="MainScreen" component={HomeScreen} options={{ title: "Home" }} />
+        <Stack.Screen name="TrackActivity" component={TrackActivity} options={{ title: "Track Activity" }} />
+        <Stack.Screen name="ActivityHistory" component={ActivityHistory} options={{ title: "Activity History" }} />
+        <Stack.Screen name="MapScreen" component={MapSection} options={{ title: "Map Screen" }} />
+
+        <Stack.Screen name="SensorsReadings" component={Readings} options={{ title: "Sensors Reading" }} />
+
+        <Stack.Screen name="MedicineReminder" component={MedicineReminder} options={{ title: "Medicine Reminder" }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  return (
+    <NavigationContainer>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Dashboard />
       {/* <MapSection /> */}
       {/* <MedicineReminder /> */}
       {/* <ActivityTracker /> */}
      
     </SafeAreaView>
+    </NavigationContainer>
+  
   );
 }
 

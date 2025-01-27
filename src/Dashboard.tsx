@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { accelerometer, barometer } from 'react-native-sensors';
 import MapView, { Polyline } from 'react-native-maps';
@@ -7,107 +7,27 @@ import Geolocation from '@react-native-community/geolocation';
 import { PermissionsAndroid } from 'react-native';
 import ActivityTracker from './ActivityTracker';
 
-const Dashboard = () => {
-  const [activityType, setActivityType] = useState('Stationary');
-  const [activityDuration, setActivityDuration] = useState(0);
-  const [totalDistance, setTotalDistance] = useState(0);
-  const [lightLevel, setLightLevel] = useState(null);
-  const [pressure, setPressure] = useState(null);
+const Dashboard = forwardRef((props, ref) =>{
+
+
+
+  const [prevLocation, setPrevLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [distance, setDistance] = useState(0); // Total distance traveled
   const [locations, setLocations] = useState([]);
 
-  useEffect(() => {
-    const watchID = Geolocation.watchPosition(
-      (position) => {
-        console.log('watchPosition', JSON.stringify(position));
-        // setPosition(JSON.stringify(position));
-      },
-      (error) => Alert.alert('WatchPosition Error', JSON.stringify(error)),
-      
-    );
-    // Clean up the watcher when the component unmounts
-    // return () => Geolocation.clearWatch(watchId);
-  }, []);
 
+  // Expose internal methods or state to the parent using useImperativeHandle
+  useImperativeHandle(ref, () => ({
+    getState: () => ({
+      distance,
+    }),
+   
+  }));
 
-  useEffect(() => {
-
-    Geolocation.getCurrentPosition(info => {
-
-      console.log(info)
-      setLocations(info.coords)
-
-    });
-
-    // Geolocation.watchPosition(success: ())
-
-
-
-
-    // Track activity type and duration
-    // const accelerometerSubscription = new accelerometer({ updateInterval: 500 }).subscribe(({ x, y, z }) => {
-    //   const magnitude = Math.sqrt(x * x + y * y + z * z);
-    //   if (magnitude > 1.2 && magnitude < 2.5) {
-    //     setActivityType('Walking');
-    //   } else if (magnitude >= 2.5) {
-    //     setActivityType('Running');
-    //   } else {
-    //     setActivityType('Stationary');
-    //   }
-    // });
-
-    // const activityTimer = setInterval(() => {
-    //   setActivityDuration((prev) => prev + 1);
-    // }, 1000);
-
-    // Track atmospheric pressure
-    // const barometerSubscription = new barometer({ updateInterval: 1000 }).subscribe(({ pressure }) => {
-    //   setPressure(pressure);
-    // });
-
-    // Track location and calculate distance
-    Geolocation.watchPosition(
-      (position) => {
-        console.log('position', position)
-        const { latitude, longitude } = position.coords;
-        // setLocations((prevLocations) => {
-        //   if (prevLocations.length > 0) {
-        //     const lastLocation = prevLocations[prevLocations.length - 1];
-        //     const distance = calculateDistance(
-        //       lastLocation.latitude,
-        //       lastLocation.longitude,
-        //       latitude,
-        //       longitude
-        //     );
-        //     setTotalDistance((prevDistance) => prevDistance + distance);
-        //   }
-        //   return [...prevLocations, { latitude, longitude }];
-        // });
-      },
-      (error) => {
-        console.error(error)
-      },
-      {
-        interval: 1000,
-        fastestInterval: 1000,
-        // timeout: 1000,
-        maximumAge: 0,
-
-        enableHighAccuracy: true,
-        distanceFilter: 0
-      }
-    );
-
-    return () => {
-      //   accelerometerSubscription.unsubscribe();
-      //   barometerSubscription.unsubscribe();
-      //   clearInterval(activityTimer);
-    };
-  }, []);
-  console.log('first', locations)
-
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const toRad = (value) => (value * Math.PI) / 180;
-    const R = 6371e3; // Earth's radius in meters
+  // Haversine formula to calculate the distance between two points
+  const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const R = 6371e3; // Radius of Earth in meters
     const φ1 = toRad(lat1);
     const φ2 = toRad(lat2);
     const Δφ = toRad(lat2 - lat1);
@@ -115,65 +35,68 @@ const Dashboard = () => {
 
     const a =
       Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) *
-      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+
+    return R * c; // Distance in meters
   };
-  //   console.log('first',locations && locations.length> 0 && locations[0] )
-  //   console.log('first',locations && locations.length> 0 && locations[0] )
-  return (
-    <ScrollView style={styles.container}>
-      <ActivityTracker />
-      {/* <Text style={styles.header}>Activity Dashboard</Text> */}
-      {/* <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude:locations&& locations.latitude || 25.2723196,
-          longitude:locations&& locations.longitude || 55.3283125,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      /> */}
-      {/* <View style={styles.section}>
-        <Text style={styles.label}>Current Activity:</Text>
-        <Text style={styles.value}>{activityType}</Text>
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Activity Duration:</Text>
-        <Text style={styles.value}>{activityDuration} seconds</Text>
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Total Distance Traveled:</Text>
-        <Text style={styles.value}>{(totalDistance / 1000).toFixed(2)} km</Text>
-      </View>
+ 
 
-      <View style={styles.section}>
-        <Text style={styles.label}>Ambient Pressure:</Text>
-        <Text style={styles.value}>{pressure ? `${pressure} hPa` : 'Loading...'}</Text>
-      </View> */}
+  
 
+
+  useEffect(() => {
+
+
+    Geolocation.watchPosition(
+      (position) => {
+        console.log('position',position)
+        // calDis(position)
+        const { latitude, longitude } = position.coords;
+        if (prevLocation) {
+          // Calculate distance between previous and current location
+          const d = haversine(
+            prevLocation.lat,
+            prevLocation.lon,
+            latitude,
+            longitude
+          );
+          setDistance((prev) => prev + d); // Update total distance
+        }
+        setPrevLocation({ lat: latitude, lon: longitude });
+
+      },
+      (error) => {
+        console.error(error)
+      },
       {
-        locations && <></>
-        //     <MapView
-        //     style={styles.map}
-        //     initialRegion={{
-        //       latitude: locations[0]?.latitude ,
-        //       longitude: locations[0]?.longitude ,
-        //       latitudeDelta: 0.01,
-        //       longitudeDelta: 0.01,
-        //     }}
-        //   >
-        //     {locations.length > 1 && <Polyline coordinates={locations} strokeWidth={4} strokeColor="blue" />}
-        //   </MapView>
-      }
+        interval: 2000,
+        fastestInterval: 2000,
 
-    </ScrollView>
-  );
-};
+        maximumAge: 0,
+        enableHighAccuracy: true,
+        distanceFilter: 10
+      }
+    );
+
+    return () => {
+
+    };
+  }, []);
+
+
+  // console.log('distance', distance)
+  return (
+    <>
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}> Total Distance</Text>
+        <Text style={styles.cardValue}>{(distance).toFixed(2)} m</Text>
+      </View>
+    </>
+  )
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -211,6 +134,29 @@ const styles = StyleSheet.create({
     height: 200,
     marginTop: 16,
     borderRadius: 8,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#888888",
+    marginBottom: 8,
+  },
+  cardValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333333",
   },
 });
 

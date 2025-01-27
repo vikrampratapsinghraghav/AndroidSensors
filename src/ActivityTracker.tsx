@@ -6,6 +6,7 @@ import { hasLightSensor, startLightSensor, stopLightSensor } from 'react-native-
 import { accelerometer, gyroscope, setUpdateIntervalForType, SensorTypes, barometer } from 'react-native-sensors';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import TrackDistance from './TrackDistance';
 // import { barometer } from 'react-native-sensors';
 const { width } = Dimensions.get('window');
 const ActivityTracker = () => {
@@ -66,7 +67,7 @@ const ActivityTracker = () => {
       console.log('error', error)
     }
 
-   
+
 
 
     setLoading(false); // Data is ready
@@ -141,8 +142,8 @@ const ActivityTracker = () => {
     };
   }, []);
 
-console.log('lightValue',lightValue)
-  
+  console.log('lightValue', lightValue)
+
 
   return (
     <ScrollView style={styles.container}>
@@ -153,6 +154,7 @@ console.log('lightValue',lightValue)
         <Text style={styles.value}>{activity}</Text>
       </View>
 
+      <TrackDistance />
       {/* <View style={styles.card}>
         <Text style={styles.label}>Duration (seconds):</Text>
         <Text style={styles.value}>{duration}s</Text>
@@ -163,14 +165,14 @@ console.log('lightValue',lightValue)
         <Text style={styles.value}>{(distance / 1000).toFixed(2)} km</Text>
       </View> */}
 
-     
+
       <View style={styles.card}>
         <Text style={styles.label}>Ambient Light Level:</Text>
         <Text style={styles.value}>{lightValue ? `${lightValue} lux` : 'N/A'}</Text>
       </View>
-     
 
-  
+
+
 
       <View style={styles.card}>
         <Text style={styles.label}>Atmospheric Pressure:</Text>
