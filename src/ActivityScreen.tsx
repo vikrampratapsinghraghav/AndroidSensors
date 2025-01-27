@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions, DeviceEventEmitter } from 'react-native';
-import { Button, Text, Card, ActivityIndicator, Appbar } from 'react-native-paper';
-import { hasLightSensor, startLightSensor, stopLightSensor } from 'react-native-ambient-light-sensor';
+import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 
 import { accelerometer, gyroscope, setUpdateIntervalForType, SensorTypes, barometer } from 'react-native-sensors';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 // import { barometer } from 'react-native-sensors';
 const ActivityScreen = () => {
@@ -15,20 +13,8 @@ const ActivityScreen = () => {
     const [accelerometerData, setAccelerometerData] = useState({ x: 0, y: 0, z: 0 });
     const [gyroscopeData, setGyroscopeData] = useState({ x: 0, y: 0, z: 0 });
     const [barometerData, setBarometerData] = useState(null);
-    const [pressure, setPressure] = useState(null);
 
-    const [lightValue, setLightValue] = useState<number | null>(null);
-    const [isLightSensorAvail, setIsLightSensorAvailable] = useState(false);
-    const destroy$ = new Subject<void>(); // Used to clean up subscriptions
-    const [result, setResult] = React.useState<number | undefined>();
-    // const [hasSensor, setHasSensor] = React.useState<boolean>();
 
-    // const [result, setResult] = React.useState<number | undefined>();
-    const [lightSenAvail, setLightSenAvail] = useState<boolean>();
-
-    // const destroy$ = new Subject();
-
-    // Thresholds for detecting activity
     const stationaryThreshold = 1.0; // Allowable variation for stationary detection
     const walkingThreshold = 2.5;   // Moderate threshold for walking detection
     const runningThreshold = 3.5;   // Higher threshold for running detection
@@ -94,46 +80,7 @@ const ActivityScreen = () => {
     }, [accelerometerData, gyroscopeData]);
 
 
-    useEffect(() => {
-        const initSensor = async () => {
-            const sensorAvailable = await hasLightSensor();
-            setIsLightSensorAvailable(sensorAvailable);
 
-            if (sensorAvailable) {
-                startLightSensor();
-
-                // Create an RxJS Observable for Light Sensor changes
-                const lightSensor$ = new Observable((subscriber) => {
-                    const listener = DeviceEventEmitter.addListener(
-                        "LightSensor",
-                        (data: { lightValue: number }) => {
-                            subscriber.next(data.lightValue);
-                        }
-                    );
-
-                    // Cleanup for observable
-                    return () => {
-                        listener.remove();
-                    };
-                });
-
-                // Subscribe to light sensor changes
-                lightSensor$
-                    .pipe(takeUntil(destroy$)) // Unsubscribe when destroy$ emits
-                    .subscribe((value) => {
-                        setLightValue(value as number); // Update state with light value
-                    });
-            }
-        };
-
-        initSensor();
-
-        return () => {
-            stopLightSensor();
-            destroy$.next(); // Notify all subscribers to clean up
-            destroy$.complete(); // Complete the subject
-        };
-    }, []);
 
     return (
         <>

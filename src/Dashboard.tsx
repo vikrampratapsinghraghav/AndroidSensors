@@ -4,8 +4,7 @@ import { accelerometer, barometer } from 'react-native-sensors';
 import MapView, { Polyline } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 // import Geolocation from '@react-native-community/geolocation';
-import { PermissionsAndroid } from 'react-native';
-import ActivityTracker from './ActivityTracker';
+
 
 const Dashboard = forwardRef((props, ref) =>{
 
@@ -13,7 +12,6 @@ const Dashboard = forwardRef((props, ref) =>{
 
   const [prevLocation, setPrevLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [distance, setDistance] = useState(0); // Total distance traveled
-  const [locations, setLocations] = useState([]);
 
 
   // Expose internal methods or state to the parent using useImperativeHandle
@@ -26,12 +24,15 @@ const Dashboard = forwardRef((props, ref) =>{
 
   // Haversine formula to calculate the distance between two points
   const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    console.log('step 1')
     const toRad = (value: number) => (value * Math.PI) / 180;
     const R = 6371e3; // Radius of Earth in meters
     const φ1 = toRad(lat1);
     const φ2 = toRad(lat2);
     const Δφ = toRad(lat2 - lat1);
     const Δλ = toRad(lon2 - lon1);
+
+    console.log('step 2')
 
     const a =
       Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
@@ -52,10 +53,10 @@ const Dashboard = forwardRef((props, ref) =>{
 
     Geolocation.watchPosition(
       (position) => {
-        console.log('position',position)
         // calDis(position)
         const { latitude, longitude } = position.coords;
         if (prevLocation) {
+          // console.log('enter')
           // Calculate distance between previous and current location
           const d = haversine(
             prevLocation.lat,
@@ -63,7 +64,14 @@ const Dashboard = forwardRef((props, ref) =>{
             latitude,
             longitude
           );
-          setDistance((prev) => prev + d); // Update total distance
+          console.log('d',d)
+          setDistance((prev) => prev + d); 
+         
+        
+          
+        }
+        else{
+
         }
         setPrevLocation({ lat: latitude, lon: longitude });
 
@@ -72,12 +80,12 @@ const Dashboard = forwardRef((props, ref) =>{
         console.error(error)
       },
       {
-        interval: 2000,
-        fastestInterval: 2000,
+        interval: 1000,
+        // fastestInterval: 10000,
 
         maximumAge: 0,
         enableHighAccuracy: true,
-        distanceFilter: 10
+        distanceFilter: 4
       }
     );
 
@@ -87,7 +95,6 @@ const Dashboard = forwardRef((props, ref) =>{
   }, []);
 
 
-  // console.log('distance', distance)
   return (
     <>
       <View style={styles.card}>

@@ -66,9 +66,9 @@ const TrackDistance = () => {
     setIsTracking(false);
   };
 
-  useEffect(() => {
-    startTracking()
-  }, [])
+  // useEffect(() => {
+  //   startTracking()
+  // }, [])
   
 
   return (

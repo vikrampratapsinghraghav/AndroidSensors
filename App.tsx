@@ -19,7 +19,6 @@ import PushNotification, {Importance} from 'react-native-push-notification';
 import { PermissionsAndroid, Platform } from "react-native";
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import ActivityTracker from './src/ActivityTracker';
 import MedicineReminder from './src/MedicineReminder';
 import { CHANNEL_ID, CHANNEL_NAME } from './src/constants';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
@@ -30,6 +29,7 @@ import HomeScreen from './src/Home';
 import Readings from './src/Readings';
 import ActivityHistory from './src/ActivityHistory';
 import MedicineHistory from './src/MedicineHistory';
+import BackgroundService from 'react-native-background-actions';
 
 
 
@@ -41,84 +41,8 @@ const Stack = createNativeStackNavigator();
 function App(): React.JSX.Element {
 
 
-  // useEffect(() => {
-  //   // Configure notifications
-  //   // configureNotifications();
 
-  //   // Configure BackgroundFetch
-  //   const configureBackgroundFetch = async () => {
-  //     console.log('fkjhsdfkhj')
-  //     // Initialize BackgroundFetch
-  //     BackgroundFetch.configure(
-  //       {
-  //         minimumFetchInterval: 1, // Fetch every 15 minutes
-  //         stopOnTerminate: false, // Continue running even if the app is terminated
-  //         startOnBoot: true, // Start background fetch after device boot
-  //         enableHeadless: true, // Allow background tasks without UI
-  //       },
-  //       async (taskId) => {
-  //         console.log('[BackgroundFetch] Task executed:', taskId);
 
-  //         // Perform your repeated task here
-  //         // showNotification('Task Executed', 'Your background task ran successfully!');
-
-  //         // Mark the task as complete
-  //         BackgroundFetch.finish(taskId);
-  //       },
-  //       (error) => {
-  //         console.error('[BackgroundFetch] Failed to configure:', error);
-  //       }
-  //     );
-
-  //     // Check the status of BackgroundFetch
-  //     const status = await BackgroundFetch.status();
-  //     console.log('[BackgroundFetch] Status:', status);
-  //   };
-
-  //   configureBackgroundFetch();
-
-  //   return () => {
-  //     // Optionally stop BackgroundFetch when the component is unmounted
-  //     BackgroundFetch.stop();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   // Create Notification Channel (required for Android 8.0+)
-  //   PushNotification.createChannel(
-  //     {
-  //       channelId: 'default-channel', // Unique channel ID
-  //       channelName: 'Default Channel', // Human-readable name
-  //       channelDescription: 'A channel for default notifications', // Optional
-  //       importance: 4, // High importance
-  //       vibrate: true, // Enable vibration
-  //     },
-  //     (created) => console.log(`Notification Channel Created: ${created}`) // Log if the channel was created
-  //   );
-
-  //   // Configure PushNotification
-  //   PushNotification.configure({
-  //     onNotification: function (notification) {
-  //       console.log('Notification Received:', notification);
-  //     },
-  //     popInitialNotification: true,
-  //     requestPermissions: true, // Request permissions on iOS
-  //   });
-  // }, []);
-
-  async function requestNotificationPermission() {
-    if (Platform.OS === "android" && Platform.Version >= 33) {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-      );
-  
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("Notification permission granted");
-      } else {
-        console.log("Notification permission denied");
-      }
-    }
-  }
 
   const requestPermissions = async () => {
     try {
@@ -156,28 +80,12 @@ function App(): React.JSX.Element {
       console.warn(err);
     }
   };
-  // const requestLocationPermission = async () => {
-  //   try {
-  //     const granted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //       {
-  //         title: 'Location Permission',
-  //         message: 'This app needs access to your location',
-  //         buttonNegative: 'Cancel',
-  //         buttonPositive: 'OK',
-  //       }
-  //     );
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //       console.log('Location permission granted');
-  //     } else {
-  //       console.log('Location permission denied');
-  //     }
-  //   } catch (err) {
-  //     console.warn(err);
-  //   }
-  // };
+  
+  
 
   useEffect(() => {
+
+    
     PushNotification.createChannel(
       {
         channelId: CHANNEL_ID, // (required)
@@ -191,15 +99,7 @@ function App(): React.JSX.Element {
       (created) =>{ console.log(`createChannel returned '${created}'`)
 
 
-      // PushNotification.localNotificationSchedule({
-      //   //... You can use all the options from localNotifications
-      //   channelId: CHANNEL_ID,
-      //   message: "My Notification Message", // (required)
-      //   date: new Date(Date.now() + 6 * 1000), // in 60 secs
-      //   allowWhileIdle: true, // T
-      //   /* Android Only Properties */
-      //   // repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-      // });
+    
     
     } // (optional) callback returns whether the channel was created, false means it already existed.
     );
@@ -235,18 +135,7 @@ function App(): React.JSX.Element {
     </NavigationContainer>
   );
 
-  return (
-    <NavigationContainer>
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <Dashboard />
-      {/* <MapSection /> */}
-      {/* <MedicineReminder /> */}
-      {/* <ActivityTracker /> */}
-     
-    </SafeAreaView>
-    </NavigationContainer>
   
-  );
 }
 
 
