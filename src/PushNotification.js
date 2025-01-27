@@ -13,7 +13,8 @@ export const scheduleNotification = (title, message, date) => {
     PushNotification.localNotificationSchedule({
         //... You can use all the options from localNotifications
         channelId: CHANNEL_ID,
-        message: "My Notification Message", // (required)
+        title: title,
+        message: message, // (required)
         date: new Date(Date.now() + 60 * 1000), // in 60 secs
         allowWhileIdle: true, // (optional) set notification to work while on doze, default: false
       

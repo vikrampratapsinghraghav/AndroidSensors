@@ -178,29 +178,31 @@ function App(): React.JSX.Element {
   // };
 
   useEffect(() => {
-    // PushNotification.createChannel(
-    //   {
-    //     channelId: CHANNEL_ID, // (required)
-    //     channelName: CHANNEL_NAME, // (required)
-    //     channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-    //     playSound: false, // (optional) default: true
-    //     soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-    //     importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-    //     vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-    //   },
-    //   (created) =>{ console.log(`createChannel returned '${created}'`)
-    //   PushNotification.localNotificationSchedule({
-    //     //... You can use all the options from localNotifications
-    //     channelId: CHANNEL_ID,
-    //     message: "My Notification Message", // (required)
-    //     date: new Date(Date.now() + 6 * 1000), // in 60 secs
-    //     allowWhileIdle: true, // T
-    //     /* Android Only Properties */
-    //     // repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
-    //   });
+    PushNotification.createChannel(
+      {
+        channelId: CHANNEL_ID, // (required)
+        channelName: CHANNEL_NAME, // (required)
+        channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+        playSound: false, // (optional) default: true
+        soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      },
+      (created) =>{ console.log(`createChannel returned '${created}'`)
+
+
+      // PushNotification.localNotificationSchedule({
+      //   //... You can use all the options from localNotifications
+      //   channelId: CHANNEL_ID,
+      //   message: "My Notification Message", // (required)
+      //   date: new Date(Date.now() + 6 * 1000), // in 60 secs
+      //   allowWhileIdle: true, // T
+      //   /* Android Only Properties */
+      //   // repeatTime: 1, // (optional) Increment of configured repeatType. Check 'Repeating Notifications' section for more info.
+      // });
     
-    // } // (optional) callback returns whether the channel was created, false means it already existed.
-    // );
+    } // (optional) callback returns whether the channel was created, false means it already existed.
+    );
    
     // requestNotificationPermission();
     requestPermissions()
