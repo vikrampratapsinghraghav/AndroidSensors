@@ -29,6 +29,7 @@ import TrackActivity from './src/TrackActivity';
 import HomeScreen from './src/Home';
 import Readings from './src/Readings';
 import ActivityHistory from './src/ActivityHistory';
+import MedicineHistory from './src/MedicineHistory';
 
 
 
@@ -225,7 +226,9 @@ function App(): React.JSX.Element {
 
         <Stack.Screen name="SensorsReadings" component={Readings} options={{ title: "Sensors Reading" }} />
 
-        <Stack.Screen name="MedicineReminder" component={MedicineReminder} options={{ title: "Medicine Reminder" }} />
+        <Stack.Screen name="MedicineReminder" component={MedicineReminder} options={{ title: "Add Medicine" }} />
+        <Stack.Screen name="MedicineHistory" component={MedicineHistory} options={{ title: "Medicine History" }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
