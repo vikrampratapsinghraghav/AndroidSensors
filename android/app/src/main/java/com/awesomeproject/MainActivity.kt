@@ -1,5 +1,6 @@
 package com.awesomeproject
 
+import android.content.Intent
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -12,6 +13,15 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "AwesomeProject"
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        // Handle your new intent here
+        // For example, checking if there is data or processing the intent
+        if (intent != null) {
+            // Do something with the new intent
+        }
+    }
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

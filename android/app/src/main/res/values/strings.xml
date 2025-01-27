@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AwesomeProject</string>
+    <string name="google_maps_api_key">AIzaSyBlrIM-pqcdDAjNN-Uq0usPdNtILcV9Llk</string>
 </resources>

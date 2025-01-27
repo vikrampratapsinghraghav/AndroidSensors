@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "308544600056",
+    "project_id": "sensors-44f60",
+    "storage_bucket": "sensors-44f60.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308544600056:android:c65ff8408479d365b0480d",
+        "android_client_info": {
+          "package_name": "com.awesomeproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJYZQsuqtHeQ_2_esZP8ADVuPcee9cL68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
