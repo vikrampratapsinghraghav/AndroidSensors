@@ -73,25 +73,6 @@ const MedicineReminder = () => {
            />
 
            <Button title="Add Reminder" onPress={addReminder} />
-
-           <FlatList
-               data={reminders}
-               keyExtractor={(item) => item.id}
-               renderItem={({ item }) => (
-                   <View
-                       style={{
-                           padding: 10,
-                           marginVertical: 5,
-                           borderWidth: 1,
-                           borderColor: '#ccc',
-                           borderRadius: 5,
-                       }}
-                   >
-                       <Text style={{ fontSize: 18 }}>{item.medicine}</Text>
-                       <Text style={{ color: '#666' }}>{item.time}</Text>
-                   </View>
-               )}
-           />
        </View>
    );
 };

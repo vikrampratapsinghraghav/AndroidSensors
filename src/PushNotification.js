@@ -14,7 +14,7 @@ export const scheduleNotification = (title, message, date) => {
         //... You can use all the options from localNotifications
         channelId: CHANNEL_ID,
         message: "My Notification Message", // (required)
-        date: new Date(Date.now() + 6 * 1000), // in 60 secs
+        date: new Date(Date.now() + 60 * 1000), // in 60 secs
         allowWhileIdle: true, // (optional) set notification to work while on doze, default: false
       
         /* Android Only Properties */
