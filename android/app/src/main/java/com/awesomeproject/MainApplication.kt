@@ -24,6 +24,7 @@ class MainApplication : Application(), ReactApplication {
               // add(MyReactNativePackage())
                 add(ReactNativePushNotificationPackage())
               add(SensorPackage())
+              add(NotificationSchedulerPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

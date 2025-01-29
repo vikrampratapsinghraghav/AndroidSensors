@@ -119,6 +119,7 @@ class SensorBackgroundService : Service(), SensorEventListener {
 
             // Update the notification with activity and sensor readings
             updateNotification("Activity: $activityType\nReadings: $sensorReadings")
+//            updateNotification("Readings: $sensorReadings")
         }
     }
 

@@ -6,11 +6,15 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 import android.os.Bundle
-import androidx.compose.ui.node.Owner
+//import androidx.compose.ui.node.Owner
 import com.facebook.react.ReactActivity
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.DefaultLifecycleObserver
+
+
+
 
 class MainActivity : ReactActivity() {
 
@@ -21,22 +25,20 @@ class MainActivity : ReactActivity() {
         super.onCreate(savedInstanceState)
 
         // Initialize the service intent
-        notificationServiceIntent = Intent(this, NotificationService::class.java)
-
-        // Observe app lifecycle state
-        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onStart(owner: Lifecycle.Owner) {
-                super.onStart(owner)
-                // App is in foreground, stop the service if it's running
-                stopService(notificationServiceIntent)
-            }
-
-            override fun onStop(owner: Lifecycle.Owner) {
-                super.onStop(owner)
-                // App is in background, start the service
-                startService(notificationServiceIntent)
-            }
-        })
+//        notificationServiceIntent = Intent(this, NotificationService::class.java)
+//
+////         Observe lifecycle changes to detect foreground/background state
+//        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
+//            override fun onStart(owner: LifecycleOwner) {
+//                // App is in foreground - Stop background service
+//                stopService(notificationServiceIntent)
+//            }
+//
+//            override fun onStop(owner: LifecycleOwner) {
+//                // App is in background - Start background service
+//                startService(notificationServiceIntent)
+//            }
+//        })
     }
 
 

@@ -31,6 +31,16 @@
             android:exported="false"
             android:foregroundServiceType="location"/>
 
+
+        <service
+            android:name=".NotificationService"
+            android:enabled="true"
+            android:foregroundServiceType="location"
+            android:permission="android.permission.FOREGROUND_SERVICE"
+            android:exported="false"/>
+
+
+
         <!-- Change the value to true to enable pop-up for in foreground on receiving remote notifications (for prevent duplicating while showing local notifications set this to false) -->
         <meta-data
             android:name="com.dieam.reactnativepushnotification.notification_foreground"
