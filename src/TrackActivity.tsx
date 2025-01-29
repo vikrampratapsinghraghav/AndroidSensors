@@ -5,6 +5,7 @@ import BackgroundService from 'react-native-background-actions';
 import TimerScreen from './TimerScreen';
 import { accelerometer, gyroscope, SensorTypes, setUpdateIntervalForType } from 'react-native-sensors';
 import { map } from 'rxjs';
+import { startSensorService, stopSensorService } from './SensorService';
 // import { barometer } from 'react-native-sensors';
 const { width } = Dimensions.get('window');
 
@@ -114,10 +115,12 @@ const ActivityTracker = () => {
     };
 
     useEffect(() => {
-        startBackgroundTask()
+        startSensorService()
+        // startBackgroundTask()
 
         return () => {
-            stopBackgroundTask()
+            stopSensorService();
+            // stopBackgroundTask()
         }
     }, [])
 
